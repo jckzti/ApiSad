@@ -12,6 +12,10 @@ namespace ApiSad.Controllers
         [FromQuery(Name = "cidade")]
         public string Cidade { get; set; }
 
+        [FromQuery(Name = "data")]
+        public string Data { get; set; }
+
+
         [FromHeader(Name = "content-type")]
         public string ContentType { get; set; }
 
@@ -27,13 +31,17 @@ namespace ApiSad.Controllers
 
         [Route("[controller]/cidade")]
         [HttpGet]
-        public IActionResult GetCidade(JObject conteudo)
+        public IActionResult GetCidade()
         {
-            dynamic json = JObject.Parse(conteudo.ToString());
+            //dynamic json = JObject.Parse("");
             Cidade cidade = new Cidade(Cidade);
-            json.temperaturaPrevista = cidade.GetCidadeAction().PreverTemperatura(DateTime.Now);
-            json.cidade = Cidade;
-            json.data = DateTime.Now.ToString("dd/MMM/yy HH:mm");
+            var json = new
+            {
+                temperaturaPrevista = cidade.GetCidadeAction().PreverTemperatura(DateTime.Now),
+                cidade = Cidade,
+                data = DateTime.Now.ToString("dd/MMM/yy HH:mm")
+            };
+            
             return Ok(json);
         }
     }
