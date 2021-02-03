@@ -2,6 +2,8 @@
 using Newtonsoft.Json.Linq;
 using ApiSad.Model;
 using System;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace ApiSad.Controllers
 {
@@ -33,7 +35,13 @@ namespace ApiSad.Controllers
         [HttpGet]
         public IActionResult GetCidade()
         {
-            //dynamic json = JObject.Parse("");
+            //dynamic json = JObject.Parse("");            
+
+            if (String.IsNullOrEmpty(Cidade))
+            {
+                return Problem("Cidade não informada e / ou inválida!");
+            }
+
             Cidade cidade = new Cidade(Cidade);
             var json = new
             {
@@ -41,7 +49,27 @@ namespace ApiSad.Controllers
                 cidade = Cidade,
                 data = DateTime.Now.ToString("dd/MMM/yy HH:mm")
             };
+
+
+            Uri usuarioUri;
+
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri("https://localhost:44358");
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            System.Net.Http.HttpResponseMessage response = client.GetAsync("weatherforecast").Result;
             
+            if (response.IsSuccessStatusCode)
+            {                
+                usuarioUri = response.Headers.Location;
+                // response.Content.ReadAsStringAsync().Result   a reposta chega aqui
+                dynamic jsonUsuarios = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
+                Console.WriteLine(jsonUsuarios);
+            }
+
+            //Se der erro na chamada, mostra o status do código de erro.
+            else
+                Console.WriteLine(response.StatusCode.ToString() + " - " + response.ReasonPhrase);
+
             return Ok(json);
         }
     }
