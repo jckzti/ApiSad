@@ -19,7 +19,7 @@ namespace ApiSad.Model
         {
             if (this.CidadeAction == null)
             {
-                this.CidadeAction = new CidadeAction(Nome);
+                this.CidadeAction = new CidadeAction(this);
             }
 
             return CidadeAction;

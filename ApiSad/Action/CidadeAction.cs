@@ -7,16 +7,16 @@ namespace ApiSad.Action
     public class CidadeAction : ITerritorio
     {
 
-        private Cidade cidade { get; set; }
+        private Cidade Cidade { get; set; }
 
-        public CidadeAction(string cidadeNome)
+        public CidadeAction(Cidade cidade)
         {
-            cidade = new Cidade(cidadeNome);
+            Cidade = cidade;
         }
 
         public decimal PreverTemperatura(DateTime data)
         {
-            if (cidade.Nome.Equals("Blumenau", StringComparison.InvariantCultureIgnoreCase)) {
+            if (Cidade.Nome.Equals("Blumenau", StringComparison.InvariantCultureIgnoreCase)) {
                 return 50;
             }
             return 1;
