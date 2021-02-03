@@ -33,7 +33,13 @@ namespace ApiSad.Controllers
         [HttpGet]
         public IActionResult GetCidade()
         {
-            //dynamic json = JObject.Parse("");
+            //dynamic json = JObject.Parse("");            
+                        
+            if (String.IsNullOrEmpty(Cidade))
+            {                
+                return Problem("Cidade não informada e / ou inválida!");
+            }
+
             Cidade cidade = new Cidade(Cidade);
             var json = new
             {
