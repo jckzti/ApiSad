@@ -18,13 +18,16 @@ namespace ApiSad.Action
         {
             if (Cidade.Nome.Equals("Blumenau", StringComparison.InvariantCultureIgnoreCase)) {
                 return 50;
+            } else
+            {
+                Random rng = new Random();
+                return rng.Next(-20, 60);
             }
-            return 1;
         }
 
         public Decimal temperatuaMedia()
         {
-            return 1;
+            return 0;
         }
     }
 }

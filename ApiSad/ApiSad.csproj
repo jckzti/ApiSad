@@ -14,5 +14,6 @@
     <Folder Include="Interface\" />
     <Folder Include="Model\" />
     <Folder Include="Action\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 </Project>

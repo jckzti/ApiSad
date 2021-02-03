@@ -1,6 +1,7 @@
 ﻿using System;
 using ApiSad.Action;
 using ApiSad.Interface;
+using ApiSad.Utils;
 
 namespace ApiSad.Model
 {
@@ -9,9 +10,14 @@ namespace ApiSad.Model
 
         public string Nome { get; set; }
 
-        public Decimal TemperaturaAtual { get; }
+        public Decimal TemperaturaAtual { get { return temperaturaAtual; } }
+        private Decimal temperaturaAtual { get; set; }
 
-        public Decimal TemperaturaMedia { get; }
+        public Decimal TemperaturaMedia { get { return temperaturaMedia; } }
+        private Decimal temperaturaMedia { get; set; }
+
+        public Decimal Umidade { get { return umidade; } }
+        private Decimal umidade { get; set; }
 
         private CidadeAction CidadeAction { get; set; }
 
@@ -19,7 +25,10 @@ namespace ApiSad.Model
         {
             if (this.CidadeAction == null)
             {
+                Random rng = new Random();
+                temperaturaAtual = TemperaturaUtil.TemperaturaAleatoria();
                 this.CidadeAction = new CidadeAction(this);
+                umidade = 100;
             }
 
             return CidadeAction;
