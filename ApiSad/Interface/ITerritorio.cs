@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 namespace ApiSad.Interface
 {
     public interface ITerritorio
     {
-        Decimal PreverTemperatura(DateTime data);
+        Decimal PreverTemperaturaAsync(DateTime data);
 
     }
 }

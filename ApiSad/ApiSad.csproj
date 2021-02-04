@@ -11,6 +11,7 @@
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.13" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Autorization\" />
     <Folder Include="Interface\" />
     <Folder Include="Model\" />
     <Folder Include="Action\" />

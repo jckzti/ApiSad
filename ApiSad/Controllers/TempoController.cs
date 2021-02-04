@@ -4,6 +4,7 @@ using ApiSad.Model;
 using System;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace ApiSad.Controllers
 {
@@ -33,7 +34,7 @@ namespace ApiSad.Controllers
 
         [Route("[controller]/cidade")]
         [HttpGet]
-        public IActionResult GetCidade()
+        public async Task<IActionResult> GetCidadeAsync()
         {
             //dynamic json = JObject.Parse("");            
 
@@ -43,34 +44,25 @@ namespace ApiSad.Controllers
             }
 
             Cidade cidade = new Cidade(Cidade);
-            var json = new
-            {
-                temperaturaPrevista = cidade.GetCidadeAction().PreverTemperatura(DateTime.Now),
-                cidade = Cidade,
-                data = DateTime.Now.ToString("dd/MMM/yy HH:mm")
+            await cidade.CarregaInformacoes();
+
+            HttpClient clientX = new HttpClient();
+            if (System.Environment.OSVersion.VersionString.Contains("WINDOWS", StringComparison.InvariantCultureIgnoreCase))
+                clientX.BaseAddress = new Uri("https://localhost:44358");
+            else
+                clientX.BaseAddress = new Uri("https://localhost:5001");
+
+            var cidadeJson = new {
+                cidade = cidade.Nome,
+                temperaturaAtual = cidade.TemperaturaAtual ,
+                sensacaoTermica = cidade.SensacaoTermica,
+                descricaoTempo =  cidade.DescricaoTempo,
+                umidade = cidade.Umidade,
+                temperaturaMedia = cidade.TemperaturaMedia,
+                dataAtual = DateTime.Now.ToString("dd/MMM/yy HH:mm:ss")
             };
 
-
-            Uri usuarioUri;
-
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:5001");
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")); //está dando erro caso nao ache a url, tratar
-            System.Net.Http.HttpResponseMessage response = client.GetAsync("weatherforecast").Result;
-            
-            if (response.IsSuccessStatusCode)
-            {                
-                usuarioUri = response.Headers.Location;
-                // response.Content.ReadAsStringAsync().Result   a reposta chega aqui
-                dynamic jsonUsuarios = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
-                Console.WriteLine(jsonUsuarios);
-            }
-
-            //Se der erro na chamada, mostra o status do código de erro.
-            else
-                Console.WriteLine(response.StatusCode.ToString() + " - " + response.ReasonPhrase);
-
-            return Ok(json);
+            return Ok(cidadeJson);
         }
     }
 }

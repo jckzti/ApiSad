@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using ApiSad.Interface;
 using ApiSad.Model;
+using Newtonsoft.Json.Linq;
 
 namespace ApiSad.Action
 {
@@ -14,20 +17,49 @@ namespace ApiSad.Action
             Cidade = cidade;
         }
 
-        public decimal PreverTemperatura(DateTime data)
+        public async Task<String> PreencheValores()
         {
-            if (Cidade.Nome.Equals("Blumenau", StringComparison.InvariantCultureIgnoreCase)) {
-                return 50;
-            } else
+            String body;
+            var client = new HttpClient();
+            var request = new HttpRequestMessage
             {
-                Random rng = new Random();
-                return rng.Next(-20, 60);
+                Method = HttpMethod.Get,
+                RequestUri = new Uri("https://community-open-weather-map.p.rapidapi.com/weather?q=Blumenau, Brasil&lang=pt&units=metric"),
+                Headers = {
+                            { "x-rapidapi-key", "3adfaf8a3dmshd546669e38be6b9p1df25ajsn255166f5ff69" },
+                            { "x-rapidapi-host", "community-open-weather-map.p.rapidapi.com" },
+                        }
+            };
+            using (var response = await client.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+                body = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(body);
+                JObject jsonRetorno = JObject.Parse(body);
+                //cidade.Nome = 
+
+                dynamic principal = (jsonRetorno["main"]);
+                dynamic tempo = (jsonRetorno["weather"][0]);
+
+                Cidade.TemperaturaAtual = principal.temp;
+                Cidade.SensacaoTermica = principal.feels_like;
+                //Cidade.DescricaoTempo = tempo.description;
+                Cidade.Umidade = principal.humidity;
+                Cidade.TemperaturaMedia = 0;
             }
+            return Cidade.ToString();
+           
+        }
+
+        public decimal PreverTemperaturaAsync(DateTime data)
+        {
+            return 0;
         }
 
         public Decimal temperatuaMedia()
         {
             return 0;
         }
+
     }
 }

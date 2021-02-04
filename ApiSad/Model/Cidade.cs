@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ApiSad.Action;
 using ApiSad.Interface;
 using ApiSad.Utils;
@@ -10,14 +11,15 @@ namespace ApiSad.Model
 
         public string Nome { get; set; }
 
-        public Decimal TemperaturaAtual { get { return temperaturaAtual; } }
-        private Decimal temperaturaAtual { get; set; }
+        public Decimal TemperaturaAtual { get; set; }
 
-        public Decimal TemperaturaMedia { get { return temperaturaMedia; } }
-        private Decimal temperaturaMedia { get; set; }
+        public Decimal TemperaturaMedia { get; set; }
 
-        public Decimal Umidade { get { return umidade; } }
-        private Decimal umidade { get; set; }
+        public Decimal Umidade { get; set; }
+
+        public Decimal SensacaoTermica { get; set; }
+
+        public string DescricaoTempo { get; set; }
 
         private CidadeAction CidadeAction { get; set; }
 
@@ -25,13 +27,15 @@ namespace ApiSad.Model
         {
             if (this.CidadeAction == null)
             {
-                Random rng = new Random();
-                temperaturaAtual = TemperaturaUtil.TemperaturaAleatoria();
                 this.CidadeAction = new CidadeAction(this);
-                umidade = 100;
             }
 
             return CidadeAction;
+        }
+
+        public async Task<String> CarregaInformacoes()
+        {
+           return await GetCidadeAction().PreencheValores();
         }
 
         public Cidade(string Nome)
