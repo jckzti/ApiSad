@@ -46,17 +46,17 @@ namespace ApiSad.Controllers
             Cidade cidade = new Cidade(Cidade);
             await cidade.CarregaInformacoes();
 
-            HttpClient clientX = new HttpClient();
-            if (System.Environment.OSVersion.VersionString.Contains("WINDOWS", StringComparison.InvariantCultureIgnoreCase))
-                clientX.BaseAddress = new Uri("https://localhost:44358");
+            HttpClient client = new HttpClient();
+            if (System.Environment.OSVersion.VersionString.Contains("WINDOWS", StringComparison.InvariantCultureIgnoreCase)) // uso futuro
+                client.BaseAddress = new Uri("https://localhost:44358");
             else
-                clientX.BaseAddress = new Uri("https://localhost:5001");
+                client.BaseAddress = new Uri("https://localhost:5001");
 
             var cidadeJson = new {
-                cidade = cidade.Nome,
+                cidade = cidade.Nome, // deixar primeiras letras maísculas
                 temperaturaAtual = cidade.TemperaturaAtual ,
                 sensacaoTermica = cidade.SensacaoTermica,
-                descricaoTempo =  cidade.DescricaoTempo,
+                descricaoTempo =  cidade.DescricaoTempo, // deixar primeira letra maíscula
                 umidade = cidade.Umidade,
                 temperaturaMedia = cidade.TemperaturaMedia,
                 dataAtual = DateTime.Now.ToString("dd/MMM/yy HH:mm:ss")
